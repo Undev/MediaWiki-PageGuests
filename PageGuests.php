@@ -21,7 +21,6 @@ $wgExtensionCredits['other'][] = array(
     'version' => 0.1,
 );
 $wgExtensionMessagesFiles[] = dirname(__FILE__) . '/PageGuests.i18n.php';
-$wgExtensionMessagesFiles[] = dirname(__FILE__) . '/PageGuests.namespaces.php';
 
 /**
  * Register ResourceLoader modules
