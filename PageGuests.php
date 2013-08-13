@@ -122,10 +122,10 @@ class PageGuests
 
         if (NS_TALK === $this->page->getTitle()->getNamespace()) {
             $link =  $this->page->getTitle()->getFullText();
-        }
-
-        if (NS_CATEGORY_TALK === $this->page->getTitle()->getNamespace()) {
+        } else if (NS_CATEGORY_TALK === $this->page->getTitle()->getNamespace()) {
             $link = 'Category:' .  $this->page->getTitle()->getText();
+        } else {
+            $link = $this->page->getTitle()->getFullText();
         }
 
         $links['namespaces']['activity'] = array(
