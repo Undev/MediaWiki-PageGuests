@@ -98,7 +98,7 @@ class PageGuests
 
     public function onSkinTemplateNavigation(SkinTemplate &$sktemplate, array &$links)
     {
-        $isActive = $talkUrl = '';
+        $isActive = $link = $talkUrl = '';
 
         if (NS_PAGE_GUESTS === $this->page->getTitle()->getNamespace()) {
             $isActive = 'selected';
@@ -120,9 +120,12 @@ class PageGuests
             $links['namespaces']['talk']['href'] = '/' . $talkUrl;
         }
 
-        $link = $this->page->getTitle()->getText();
+        if (NS_TALK === $this->page->getTitle()->getNamespace()) {
+            $link =  $this->page->getTitle()->getFullText();
+        }
+
         if (NS_CATEGORY_TALK === $this->page->getTitle()->getNamespace()) {
-            $link = 'Category:' . $link;
+            $link = 'Category:' .  $this->page->getTitle()->getText();
         }
 
         $links['namespaces']['activity'] = array(
