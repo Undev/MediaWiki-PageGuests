@@ -8,7 +8,10 @@
 
 if (!defined('NS_PAGE_GUESTS')) {
     define('NS_PAGE_GUESTS', 3117);
+
     $wgExtraNamespaces[NS_PAGE_GUESTS] = basename(__FILE__, ".php");
+    $wgNamespaceProtection[NS_PAGE_GUESTS] = array('PageGuestsEdit');
+    $wgGroupPermissions['*']['PageGuestsEdit'] = false;
 }
 
 $wgExtensionFunctions[] = 'wfSetupPageGuests';
@@ -18,24 +21,9 @@ $wgExtensionCredits['other'][] = array(
     'author' => '[http://www.facebook.com/denisovdenis Denisov Denis]',
     'url' => 'https://github.com/Undev/MediaWiki-PageGuests',
     'description' => 'The expansion allows you to gather information on who has viewed the page.',
-    'version' => 0.1,
+    'version' => 0.2,
 );
 $wgExtensionMessagesFiles[] = dirname(__FILE__) . '/PageGuests.i18n.php';
-
-/**
- * Register ResourceLoader modules
- */
-$commonModuleInfo = array(
-    'localBasePath' => dirname(__FILE__) . '/modules',
-    'remoteExtPath' => 'PageGuests/modules',
-);
-
-$wgResourceModules['ext.PageGuests'] = array(
-        'scripts' => 'ext.PageGuests.js',
-        'messages' => array(
-            'pageguests-tab-title',
-        ),
-    ) + $commonModuleInfo;
 
 class PageGuests
 {
@@ -58,6 +46,7 @@ class PageGuests
         global $wgHooks;
 
         $wgHooks['OutputPageBeforeHTML'][] = $this;
+        $wgHooks['SkinTemplateNavigation'][] = $this;
     }
 
     public function __toString()
@@ -70,10 +59,6 @@ class PageGuests
         try {
             $this->page = RequestContext::getMain()->getWikiPage();
             $this->guest = RequestContext::getMain()->getUser();
-
-            if ($this->getPermissions()) {
-                RequestContext::getMain()->getOutput()->addModules('ext.PageGuests');
-            }
         } catch (Exception $e) {
             throw new Exception(__CLASS__ . wfMessage('pageguests-error-extension')->inContentLanguage()->plain());
         }
@@ -107,6 +92,44 @@ class PageGuests
                 $this->setGuest();
             }
         }
+
+        return true;
+    }
+
+    public function onSkinTemplateNavigation(SkinTemplate &$sktemplate, array &$links)
+    {
+        $isActive = $talkUrl = '';
+
+        if (NS_PAGE_GUESTS === $this->page->getTitle()->getNamespace()) {
+            $isActive = 'selected';
+            foreach ($links['namespaces'] as &$namespace) {
+                if (isset($namespace['class'])) {
+                    $namespace['class'] = 'new';
+                }
+            }
+
+            $isCategory = explode(':', $this->page->getTitle()->getText());
+
+            if (count($isCategory) > 1) {
+                $isCategory[0] = 'Category_talk';
+                $talkUrl = implode(':', $isCategory);
+            } else {
+                $talkUrl = 'Talk:' . $this->page->getTitle()->getText();
+            }
+
+            $links['namespaces']['talk']['href'] = '/' . $talkUrl;
+        }
+
+        $link = $this->page->getTitle()->getText();
+        if (NS_CATEGORY_TALK === $this->page->getTitle()->getNamespace()) {
+            $link = 'Category:' . $link;
+        }
+
+        $links['namespaces']['activity'] = array(
+            'class' => $isActive,
+            'text' => wfMessage('pageguests-tab-title')->inContentLanguage()->plain(),
+            'href' => '/' . __CLASS__ . ':' . $link,
+        );
 
         return true;
     }

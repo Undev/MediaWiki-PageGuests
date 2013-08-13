@@ -16,7 +16,7 @@ $messages['en'] = array(
     'pageguests-specialpage-empty' => 'The page still has not read it.',
     'pageguests-specialpage-restriction' => 'This page is not available for you to watch.',
 
-    'pageguests-tab-title' => 'Log',
+    'pageguests-tab-title' => 'Activity Log',
 );
 
 $messages['ru'] = array(
@@ -27,5 +27,5 @@ $messages['ru'] = array(
     'pageguests-specialpage-empty' => 'Страницу еще никто не читал.',
     'pageguests-specialpage-restriction' => 'Данная страница Вам недоустна для просмотра.',
 
-    'pageguests-tab-title' => 'Просмотры',
+    'pageguests-tab-title' => 'Лог активности',
 );
