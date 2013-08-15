@@ -74,6 +74,8 @@ class PageGuests
             return false;
         }
 
+        $out->setArticleFlag(false);
+
         if ($this->isSpecialPage()) {
             $text = $this->generateGuestPage();
         } else {
@@ -98,6 +100,12 @@ class PageGuests
 
     public function onSkinTemplateNavigation(SkinTemplate &$sktemplate, array &$links)
     {
+        try {
+            $this->init();
+        } catch (Exception $e) {
+            return false;
+        }
+
         $isActive = $link = $talkUrl = '';
 
         if (NS_PAGE_GUESTS === $this->page->getTitle()->getNamespace()) {
@@ -118,12 +126,11 @@ class PageGuests
             }
 
             $links['namespaces']['talk']['href'] = '/' . $talkUrl;
-        }
-
-        if (NS_TALK === $this->page->getTitle()->getNamespace()) {
-            $link =  $this->page->getTitle()->getFullText();
+            $link = $this->page->getTitle()->getText();
+        } else if (NS_TALK === $this->page->getTitle()->getNamespace()) {
+            $link = $this->page->getTitle()->getText();
         } else if (NS_CATEGORY_TALK === $this->page->getTitle()->getNamespace()) {
-            $link = 'Category:' .  $this->page->getTitle()->getText();
+            $link = 'Category:' . $this->page->getTitle()->getText();
         } else {
             $link = $this->page->getTitle()->getFullText();
         }
