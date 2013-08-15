@@ -74,10 +74,9 @@ class PageGuests
             return false;
         }
 
-        $out->setArticleFlag(false);
-
         if ($this->isSpecialPage()) {
             $text = $this->generateGuestPage();
+            $out->setArticleFlag(false);
         } else {
             if ($guests = $this->getGuests()) {
                 $lastUser = reset($guests);
