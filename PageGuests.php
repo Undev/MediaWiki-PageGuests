@@ -105,40 +105,42 @@ class PageGuests
             return false;
         }
 
-        $isActive = $link = $talkUrl = '';
+        if ($this->getPermissions()) {
+            $isActive = $link = $talkUrl = '';
 
-        if (NS_PAGE_GUESTS === $this->page->getTitle()->getNamespace()) {
-            $isActive = 'selected';
-            foreach ($links['namespaces'] as &$namespace) {
-                if (isset($namespace['class'])) {
-                    $namespace['class'] = 'new';
+            if (NS_PAGE_GUESTS === $this->page->getTitle()->getNamespace()) {
+                $isActive = 'selected';
+                foreach ($links['namespaces'] as &$namespace) {
+                    if (isset($namespace['class'])) {
+                        $namespace['class'] = 'new';
+                    }
                 }
-            }
 
-            $isCategory = explode(':', $this->page->getTitle()->getText());
+                $isCategory = explode(':', $this->page->getTitle()->getText());
 
-            if (count($isCategory) > 1) {
-                $isCategory[0] = 'Category_talk';
-                $talkUrl = implode(':', $isCategory);
+                if (count($isCategory) > 1) {
+                    $isCategory[0] = 'Category_talk';
+                    $talkUrl = implode(':', $isCategory);
+                } else {
+                    $talkUrl = 'Talk:' . $this->page->getTitle()->getText();
+                }
+
+                $links['namespaces']['talk']['href'] = '/' . $talkUrl;
+                $link = $this->page->getTitle()->getText();
+            } else if (NS_TALK === $this->page->getTitle()->getNamespace()) {
+                $link = $this->page->getTitle()->getText();
+            } else if (NS_CATEGORY_TALK === $this->page->getTitle()->getNamespace()) {
+                $link = 'Category:' . $this->page->getTitle()->getText();
             } else {
-                $talkUrl = 'Talk:' . $this->page->getTitle()->getText();
+                $link = $this->page->getTitle()->getFullText();
             }
 
-            $links['namespaces']['talk']['href'] = '/' . $talkUrl;
-            $link = $this->page->getTitle()->getText();
-        } else if (NS_TALK === $this->page->getTitle()->getNamespace()) {
-            $link = $this->page->getTitle()->getText();
-        } else if (NS_CATEGORY_TALK === $this->page->getTitle()->getNamespace()) {
-            $link = 'Category:' . $this->page->getTitle()->getText();
-        } else {
-            $link = $this->page->getTitle()->getFullText();
+            $links['namespaces']['activity'] = array(
+                'class' => $isActive,
+                'text' => wfMessage('pageguests-tab-title')->inContentLanguage()->plain(),
+                'href' => '/' . __CLASS__ . ':' . $link,
+            );
         }
-
-        $links['namespaces']['activity'] = array(
-            'class' => $isActive,
-            'text' => wfMessage('pageguests-tab-title')->inContentLanguage()->plain(),
-            'href' => '/' . __CLASS__ . ':' . $link,
-        );
 
         return true;
     }
