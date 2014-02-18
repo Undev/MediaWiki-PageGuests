@@ -1,10 +1,4 @@
 <?php
-/**
- * Author: Denisov Denis
- * Email: denisovdenis@me.com
- * Date: 12.08.13
- * Time: 13:25
- */
 
 if (!defined('NS_PAGE_GUESTS')) {
     define('NS_PAGE_GUESTS', 3117);
@@ -18,7 +12,6 @@ $wgExtensionFunctions[] = 'wfSetupPageGuests';
 $wgExtensionCredits['other'][] = array(
     'path' => __FILE__,
     'name' => 'PageGuests',
-    'author' => '[http://www.facebook.com/denisovdenis Denisov Denis]',
     'url' => 'https://github.com/Undev/MediaWiki-PageGuests',
     'description' => 'The expansion allows you to gather information on who has viewed the page.',
     'version' => 0.2,
