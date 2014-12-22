@@ -25,7 +25,7 @@ $messages['ru'] = array(
 
     'pageguests-specialpage-header' => 'На этой странице отображаются пользователи, которые недавно просматривали данную статью.',
     'pageguests-specialpage-empty' => 'Страницу еще никто не читал.',
-    'pageguests-specialpage-restriction' => 'Данная страница Вам недоустна для просмотра.',
+    'pageguests-specialpage-restriction' => 'Данная страница Вам недоступна для просмотра.',
 
     'pageguests-tab-title' => 'Лог активности',
 );
